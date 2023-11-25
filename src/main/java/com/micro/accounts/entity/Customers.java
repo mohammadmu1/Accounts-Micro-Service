@@ -9,7 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter@Getter@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Customer extends BaseEntity{
+public class Customers extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "native")
