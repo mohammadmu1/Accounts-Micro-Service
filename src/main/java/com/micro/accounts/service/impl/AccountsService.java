@@ -2,10 +2,13 @@ package com.micro.accounts.service.impl;
 
 import com.micro.accounts.constants.AccountsConstants;
 import com.micro.accounts.constants.CustomerConstant;
+import com.micro.accounts.dto.AccountsDto;
 import com.micro.accounts.dto.CustomerDto;
 import com.micro.accounts.entity.Accounts;
 import com.micro.accounts.entity.Customers;
 import com.micro.accounts.exception.CustomerAlreadyExistsException;
+import com.micro.accounts.exception.ResourceNotFoundException;
+import com.micro.accounts.mapper.AccountsMapper;
 import com.micro.accounts.mapper.CustomerMapper;
 import com.micro.accounts.repository.AccountRepository;
 import com.micro.accounts.repository.CustomerRepository;
@@ -40,6 +43,9 @@ public class AccountsService implements IAccountsService {
 
          accountRepository.save(createNewAccount(customer));
     }
+
+
+
     private Accounts createNewAccount(Customers customer){
         Accounts newAccount = new Accounts();
         newAccount.setCustomerId(customer.getCustomerId());
@@ -50,5 +56,22 @@ public class AccountsService implements IAccountsService {
         newAccount.setAccountType(AccountsConstants.SAVINGS);
         newAccount.setBranchAddress(AccountsConstants.ADDRESS);
         return newAccount;
+    }
+
+    @Override
+    public CustomerDto fetchAccount(String mobileNumber) {
+
+        Customers customer= customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+              ()->new ResourceNotFoundException("Customer","Mobile Number",mobileNumber));
+
+        Accounts account = accountRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
+                ()->new ResourceNotFoundException("account","Customer Id",customer.getCustomerId().toString())
+        );
+
+     CustomerDto customerDto= CustomerMapper.mapToCustomerDto(customer , new CustomerDto());
+
+     customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(account, new AccountsDto()));
+
+     return customerDto;
     }
 }

@@ -1,6 +1,7 @@
 package com.micro.accounts.entity;
 
 
+import com.micro.accounts.dto.AccountsDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,5 +23,7 @@ public class Customers extends BaseEntity{
     private String email;
 
     private String mobileNumber;
+
+
 
 }
